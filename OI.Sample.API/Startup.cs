@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
@@ -11,6 +12,7 @@ using OI.Sample.API.Interfaces;
 using OI.Sample.API.Services;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,6 +54,14 @@ namespace OI.Sample.API
 
             app.UseRouting();
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                        Path.Combine(Directory.GetCurrentDirectory(), "Content")
+                        ),
+                RequestPath = "/content"
+
+            });
             app.UseCors(x => x
                 .AllowAnyMethod()
                 .AllowAnyHeader()
